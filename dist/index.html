@@ -12,25 +12,29 @@
     <main class="shell">
       <header class="topbar">
         <a class="brand" href="#inicio" aria-label="Alerta Nacional CL, inicio">
-          <span class="brand-mark">⌁</span><span>ALERTA<br>NACIONAL <i>CL</i></span>
+          <span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><span>ALERTA NACIONAL <i>CL</i></span>
         </a>
-        <div class="live-status"><span></span> MONITOREO ACTIVO</div>
-        <a class="notify-link" href="#suscripcion">Recibir alertas ↗</a>
+        <nav aria-label="Navegación principal"><a href="#inicio">Panel</a><a href="#eventos">Eventos</a><a href="#preparacion">Preparación</a></nav>
+        <a class="notify-link" href="#suscripcion">Activar alertas <span>→</span></a>
       </header>
 
       <section id="inicio" class="hero">
-        <div>
-          <p class="eyebrow">REVISIÓN DEL SISTEMA · <span id="updated">Ahora</span></p>
-          <h1>Chile, informado<br><em>cuando importa.</em></h1>
-          <p class="lead">Consulta eventos relevantes y recibe alertas por correo para mantenerte preparado ante sismos y amenazas naturales.</p>
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot"></span> SISTEMA EN OPERACIÓN · ACTUALIZADO AHORA</p>
+          <h1>Información clara<br>para actuar a <em>tiempo.</em></h1>
+          <p class="lead">Monitorea eventos nacionales y recibe alertas verificables para tu región.</p>
+          <div class="hero-actions"><a class="primary-action" href="#suscripcion">Configurar alertas</a><a class="text-action" href="#eventos">Ver actividad <span>↓</span></a></div>
         </div>
         <div class="signal-card" aria-label="Estado de amenaza nacional">
-          <p>ESTADO NACIONAL</p>
-          <strong>NORMAL</strong>
-          <span>Sin alertas críticas activas</span>
-          <div class="wave" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+          <div class="card-top"><p>ESTADO NACIONAL</p><span class="status-pill"><i></i> Normal</span></div>
+          <strong>Sin alertas<br>críticas activas</strong>
+          <p class="card-detail">La red de monitoreo continúa operativa en todo el país.</p>
+          <div class="wave" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+          <div class="card-footer"><span>ÚLTIMA REVISIÓN</span><b>Hace unos segundos</b></div>
         </div>
       </section>
+
+      <section class="summary" aria-label="Resumen operativo"><div><span>01</span><p>Alertas activas</p><strong>0</strong></div><div><span>02</span><p>Eventos hoy</p><strong>2</strong></div><div><span>03</span><p>Cobertura</p><strong>16 regiones</strong></div></section>
 
       <section class="controls" aria-label="Filtrar eventos">
         <label>Región
@@ -42,13 +46,13 @@
         <button id="filter" type="button">Actualizar vista</button>
       </section>
 
-      <section class="dashboard" aria-label="Panel de eventos">
+      <section id="eventos" class="dashboard" aria-label="Panel de eventos">
         <div class="events-panel">
           <div class="section-heading"><div><p class="eyebrow">ÚLTIMOS REPORTES</p><h2>Actividad reciente</h2></div><span id="count">3 eventos</span></div>
           <div id="events" class="events"></div>
           <p class="disclaimer">Información demostrativa. Verifica siempre las instrucciones emitidas por las autoridades competentes.</p>
         </div>
-        <aside class="readiness">
+        <aside id="preparacion" class="readiness">
           <p class="eyebrow">PREPARACIÓN</p>
           <h2>¿Qué hacer<br>ante un sismo?</h2>
           <ol><li>Aléjate de ventanas y objetos que puedan caer.</li><li>Ubícate junto a un elemento firme.</li><li>Al terminar, revisa vías de evacuación oficiales.</li></ol>
