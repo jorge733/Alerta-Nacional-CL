@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Monitoreo y alertas nacionales de Chile." />
+    <title>Alerta Nacional CL</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="Alerta Nacional CL, inicio">
+          <span class="brand-mark">⌁</span><span>ALERTA<br>NACIONAL <i>CL</i></span>
+        </a>
+        <div class="live-status"><span></span> MONITOREO ACTIVO</div>
+        <a class="notify-link" href="#suscripcion">Recibir alertas ↗</a>
+      </header>
+
+      <section id="inicio" class="hero">
+        <div>
+          <p class="eyebrow">REVISIÓN DEL SISTEMA · <span id="updated">Ahora</span></p>
+          <h1>Chile, informado<br><em>cuando importa.</em></h1>
+          <p class="lead">Consulta eventos relevantes y recibe alertas por correo para mantenerte preparado ante sismos y amenazas naturales.</p>
+        </div>
+        <div class="signal-card" aria-label="Estado de amenaza nacional">
+          <p>ESTADO NACIONAL</p>
+          <strong>NORMAL</strong>
+          <span>Sin alertas críticas activas</span>
+          <div class="wave" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Filtrar eventos">
+        <label>Región
+          <select id="region"><option value="Todas">Todo Chile</option><option>Metropolitana</option><option>Valparaíso</option><option>Biobío</option><option>Antofagasta</option><option>Los Lagos</option></select>
+        </label>
+        <label>Tipo de evento
+          <select id="type"><option value="Todos">Todos</option><option>Sismo</option><option>Incendio</option><option>Meteorológico</option><option>Volcánico</option></select>
+        </label>
+        <button id="filter" type="button">Actualizar vista</button>
+      </section>
+
+      <section class="dashboard" aria-label="Panel de eventos">
+        <div class="events-panel">
+          <div class="section-heading"><div><p class="eyebrow">ÚLTIMOS REPORTES</p><h2>Actividad reciente</h2></div><span id="count">3 eventos</span></div>
+          <div id="events" class="events"></div>
+          <p class="disclaimer">Información demostrativa. Verifica siempre las instrucciones emitidas por las autoridades competentes.</p>
+        </div>
+        <aside class="readiness">
+          <p class="eyebrow">PREPARACIÓN</p>
+          <h2>¿Qué hacer<br>ante un sismo?</h2>
+          <ol><li>Aléjate de ventanas y objetos que puedan caer.</li><li>Ubícate junto a un elemento firme.</li><li>Al terminar, revisa vías de evacuación oficiales.</li></ol>
+          <a href="#suscripcion">Mantente informado →</a>
+        </aside>
+      </section>
+
+      <section id="suscripcion" class="subscribe">
+        <div><p class="eyebrow">ALERTAS A TU CORREO</p><h2>Recibe solo lo relevante<br>para tu zona.</h2></div>
+        <form id="subscription-form">
+          <label for="email">Correo electrónico</label>
+          <div class="email-row"><input id="email" type="email" placeholder="tu@correo.cl" required /><button type="submit">Suscribirme</button></div>
+          <label class="check"><input type="checkbox" required /> Acepto recibir alertas y comunicaciones del servicio.</label>
+          <p id="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <footer><span>ALERTA NACIONAL CL</span><span>Plataforma informativa · Chile</span><span>Las alertas oficiales prevalecen.</span></footer>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
