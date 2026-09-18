@@ -1,16 +1,34 @@
-const data = [
-  { time: '12:42', type: 'Sismo', region: 'Valparaíso', title: 'Sismo percibido en la zona central', detail: 'Magnitud referencial 4.2 · Sin afectación reportada.' },
-  { time: '09:18', type: 'Meteorológico', region: 'Los Lagos', title: 'Aviso de precipitaciones intensas', detail: 'Revisa condiciones locales y recomendaciones oficiales.' },
-  { time: 'Ayer', type: 'Incendio', region: 'Biobío', title: 'Monitoreo preventivo de condiciones de riesgo', detail: 'Información general de prevención y autocuidado.' }
-];
+const FEED_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
+const CHILE = { minLat: -57, maxLat: -17, minLon: -82, maxLon: -65 };
+let liveEvents = [];
 const events = document.querySelector('#events');
+const $ = selector => document.querySelector(selector);
+const esc = value => String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
+function regionOf(place) { const text = (place || '').toLowerCase(); const known = [['valparaíso','Valparaíso'],['valparaiso','Valparaíso'],['biobío','Biobío'],['biobio','Biobío'],['antofagasta','Antofagasta'],['los lagos','Los Lagos'],['santiago','Metropolitana']]; return (known.find(([match]) => text.includes(match)) || [null, 'Chile'])[1]; }
+function age(time) { const min = Math.max(0, Math.round((Date.now() - time) / 60000)); if (min < 1) return 'Ahora'; if (min < 60) return `Hace ${min} min`; return `Hace ${Math.round(min / 60)} h`; }
 function render() {
-  const region = document.querySelector('#region').value;
-  const type = document.querySelector('#type').value;
-  const list = data.filter(e => (region === 'Todas' || e.region === region) && (type === 'Todos' || e.type === type));
-  document.querySelector('#count').textContent = `${list.length} ${list.length === 1 ? 'evento' : 'eventos'}`;
-  events.innerHTML = list.length ? list.map(e => `<article class="event"><time>${e.time}</time><div><h3>${e.title}</h3><p>${e.region} · ${e.detail}</p></div><span class="tag ${e.type.toLowerCase()}">${e.type.toUpperCase()}</span></article>`).join('') : '<p class="disclaimer">No hay eventos que coincidan con estos filtros.</p>';
+  const region = $('#region').value, type = $('#type').value;
+  const list = liveEvents.filter(event => (region === 'Todas' || event.region === region) && (type === 'Todos' || type === 'Sismo'));
+  $('#count').textContent = `${list.length} ${list.length === 1 ? 'evento' : 'eventos'}`;
+  events.innerHTML = list.length ? list.slice(0, 8).map(event => `<article class="event"><time>${age(event.time)}</time><div><h3>Magnitud ${event.mag.toFixed(1)} · ${esc(event.place)}</h3><p>${esc(event.region)} · Profundidad ${event.depth.toFixed(1)} km · ${new Date(event.time).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</p></div><a class="tag sismo" href="${esc(event.url)}" target="_blank" rel="noreferrer">SISMO ↗</a></article>`).join('') : '<p class="disclaimer">No hay eventos sísmicos recientes que coincidan con estos filtros.</p>';
 }
-document.querySelector('#filter').addEventListener('click', render);
-document.querySelector('#subscription-form').addEventListener('submit', e => { e.preventDefault(); document.querySelector('#form-message').textContent = 'Solicitud recibida. Conecta un proveedor de correo para activar los envíos.'; e.target.reset(); });
-render();
+async function loadEarthquakes() {
+  try {
+    const response = await fetch(FEED_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Fuente no disponible');
+    const feed = await response.json();
+    liveEvents = feed.features.filter(item => { const [lon, lat] = item.geometry.coordinates; return lat >= CHILE.minLat && lat <= CHILE.maxLat && lon >= CHILE.minLon && lon <= CHILE.maxLon; }).map(item => ({ mag: item.properties.mag || 0, place: item.properties.place || 'Ubicación por determinar', region: regionOf(item.properties.place), time: item.properties.time, depth: item.geometry.coordinates[2] || 0, url: item.properties.url })).sort((a, b) => b.time - a.time);
+    $('#today-count').textContent = liveEvents.length;
+    $('#alert-count').textContent = liveEvents.filter(event => event.mag >= 5.5).length;
+    const latest = liveEvents[0];
+    $('#national-status').innerHTML = latest ? 'Actividad sísmica<br>monitoreada' : 'Sin actividad sísmica<br>reciente';
+    $('#national-detail').textContent = latest ? `Último evento: M ${latest.mag.toFixed(1)} · ${latest.place}.` : 'No se registran eventos dentro del área de monitoreo.';
+    $('#updated').textContent = `Actualizado ${new Date(feed.metadata.generated).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
+    render();
+  } catch (error) {
+    $('#national-status').innerHTML = 'Fuente temporalmente<br>no disponible'; $('#national-detail').textContent = 'Reintentaremos la conexión automáticamente.'; $('#count').textContent = 'Sin conexión'; events.innerHTML = '<p class="disclaimer">No fue posible cargar datos en vivo. Revisa los canales oficiales mientras se restablece la conexión.</p>';
+  }
+}
+$('#filter').addEventListener('click', render);
+$('#subscription-form').addEventListener('submit', event => { event.preventDefault(); $('#form-message').textContent = 'Solicitud recibida. Conecta un proveedor de correo para activar los envíos.'; event.target.reset(); });
+loadEarthquakes(); setInterval(loadEarthquakes, 60000);

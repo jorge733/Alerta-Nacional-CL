@@ -27,14 +27,14 @@
         </div>
         <div class="signal-card" aria-label="Estado de amenaza nacional">
           <div class="card-top"><p>ESTADO NACIONAL</p><span class="status-pill"><i></i> Normal</span></div>
-          <strong>Sin alertas<br>críticas activas</strong>
-          <p class="card-detail">La red de monitoreo continúa operativa en todo el país.</p>
+          <strong id="national-status">Cargando actividad<br>sísmica…</strong>
+          <p id="national-detail" class="card-detail">Conectando con la fuente de eventos.</p>
           <div class="wave" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div>
-          <div class="card-footer"><span>ÚLTIMA REVISIÓN</span><b>Hace unos segundos</b></div>
+          <div class="card-footer"><span>ÚLTIMA REVISIÓN</span><b id="updated">Conectando…</b></div>
         </div>
       </section>
 
-      <section class="summary" aria-label="Resumen operativo"><div><span>01</span><p>Alertas activas</p><strong>0</strong></div><div><span>02</span><p>Eventos hoy</p><strong>2</strong></div><div><span>03</span><p>Cobertura</p><strong>16 regiones</strong></div></section>
+      <section class="summary" aria-label="Resumen operativo"><div><span>01</span><p>Alertas activas</p><strong id="alert-count">—</strong></div><div><span>02</span><p>Eventos recientes</p><strong id="today-count">—</strong></div><div><span>03</span><p>Cobertura</p><strong>16 regiones</strong></div></section>
 
       <section class="controls" aria-label="Filtrar eventos">
         <label>Región
@@ -48,9 +48,9 @@
 
       <section id="eventos" class="dashboard" aria-label="Panel de eventos">
         <div class="events-panel">
-          <div class="section-heading"><div><p class="eyebrow">ÚLTIMOS REPORTES</p><h2>Actividad reciente</h2></div><span id="count">3 eventos</span></div>
+          <div class="section-heading"><div><p class="eyebrow">EVENTOS SÍSMICOS · DATOS EN VIVO</p><h2>Actividad reciente</h2></div><span id="count">Cargando…</span></div>
           <div id="events" class="events"></div>
-          <p class="disclaimer">Información demostrativa. Verifica siempre las instrucciones emitidas por las autoridades competentes.</p>
+          <p class="disclaimer">Datos sísmicos automáticos: <a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noreferrer">USGS</a>. Son preliminares y no sustituyen las instrucciones de <a href="https://www.senapred.cl/" target="_blank" rel="noreferrer">SENAPRED</a> ni los reportes del <a href="https://www.sismologia.cl/" target="_blank" rel="noreferrer">CSN</a>.</p>
         </div>
         <aside id="preparacion" class="readiness">
           <p class="eyebrow">PREPARACIÓN</p>
