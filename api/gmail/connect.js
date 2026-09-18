@@ -1,0 +1,2 @@
+const crypto = require('crypto');
+module.exports = (req,res) => { const nonce = crypto.randomBytes(24).toString('hex'); const p = new URLSearchParams({client_id:process.env.GMAIL_CLIENT_ID,redirect_uri:process.env.GMAIL_REDIRECT_URI,response_type:'code',scope:'https://www.googleapis.com/auth/gmail.send',access_type:'offline',prompt:'consent',state:nonce}); res.writeHead(302,{Location:`https://accounts.google.com/o/oauth2/v2/auth?${p}`, 'Set-Cookie':`oauth_state=${nonce}; HttpOnly; Secure; SameSite=Lax; Path=/api/gmail; Max-Age=600`}); res.end(); };

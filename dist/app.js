@@ -30,5 +30,5 @@ async function loadEarthquakes() {
   }
 }
 $('#filter').addEventListener('click', render);
-$('#subscription-form').addEventListener('submit', event => { event.preventDefault(); $('#form-message').textContent = 'Solicitud recibida. Conecta un proveedor de correo para activar los envíos.'; event.target.reset(); });
+$('#subscription-form').addEventListener('submit', async event => { event.preventDefault(); const form = event.target; const message = $('#form-message'); message.textContent = 'Enviando confirmación…'; try { const response = await fetch('/api/subscribe', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#email').value,consent:form.querySelector('input[type="checkbox"]').checked})}); const result = await response.json(); if (!response.ok) throw new Error(result.error); message.textContent = result.message; form.reset(); } catch (error) { message.textContent = error.message || 'No fue posible procesar tu solicitud.'; } });
 loadEarthquakes(); setInterval(loadEarthquakes, 60000);
