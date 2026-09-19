@@ -15,7 +15,7 @@ function render() {
 }
 async function loadEarthquakes() {
   try {
-    const response = await fetch(FEED_URL, { cache: 'no-store' });
+    const response = await fetch(`${FEED_URL}?_=${Date.now()}`, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
     if (!response.ok) throw new Error('Fuente no disponible');
     const feed = await response.json();
     liveEvents = feed.features.filter(item => { const [lon, lat] = item.geometry.coordinates; return lat >= CHILE.minLat && lat <= CHILE.maxLat && lon >= CHILE.minLon && lon <= CHILE.maxLon; }).map(item => ({ mag: item.properties.mag || 0, place: item.properties.place || 'Ubicación por determinar', region: regionOf(item.properties.place), time: item.properties.time, depth: item.geometry.coordinates[2] || 0, url: item.properties.url })).sort((a, b) => b.time - a.time);
@@ -24,7 +24,8 @@ async function loadEarthquakes() {
     const latest = liveEvents[0];
     $('#national-status').innerHTML = latest ? 'Actividad sísmica<br>monitoreada' : 'Sin actividad sísmica<br>reciente';
     $('#national-detail').textContent = latest ? `Último evento: M ${latest.mag.toFixed(1)} · ${latest.place}.` : 'No se registran eventos dentro del área de monitoreo.';
-    $('#updated').textContent = `Actualizado ${new Date(feed.metadata.generated).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
+    const generated = new Date(feed.metadata.generated);
+    $('#updated').textContent = `Actualizado ${generated.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
     render();
   } catch (error) {
     $('#national-status').innerHTML = 'Fuente temporalmente<br>no disponible'; $('#national-detail').textContent = 'Reintentaremos la conexión automáticamente.'; $('#count').textContent = 'Sin conexión'; events.innerHTML = '<p class="disclaimer">No fue posible cargar datos en vivo. Revisa los canales oficiales mientras se restablece la conexión.</p>';
