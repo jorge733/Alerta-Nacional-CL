@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Monitoreo y alertas nacionales de Chile." />
+    <meta name="theme-color" content="#0e4055" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <title>Alerta Nacional CL</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="styles.css" />
@@ -15,7 +17,7 @@
           <span class="brand-mark" aria-hidden="true"><b></b><b></b><b></b></span><span>ALERTA NACIONAL <i>CL</i></span>
         </a>
         <nav aria-label="Navegación principal"><a href="#inicio">Panel</a><a href="#eventos">Eventos</a><a href="#preparacion">Preparación</a></nav>
-        <a class="notify-link" href="#suscripcion">Activar alertas <span>→</span></a>
+        <div class="topbar-actions"><button id="install-app" class="install-button" type="button" hidden>Instalar app <span>↓</span></button><a class="notify-link" href="#suscripcion">Activar alertas <span>→</span></a></div>
       </header>
 
       <section id="inicio" class="hero">

@@ -1,0 +1,12 @@
+{
+  "name": "Alerta Nacional CL",
+  "short_name": "Alerta CL",
+  "description": "Monitoreo y alertas nacionales de Chile.",
+  "lang": "es-CL",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7f8",
+  "theme_color": "#0e4055",
+  "icons": [{"src":"/favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

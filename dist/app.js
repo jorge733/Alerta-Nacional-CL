@@ -1,4 +1,5 @@
 const FEED_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
+let deferredInstallPrompt;
 const CHILE = { minLat: -57, maxLat: -17, minLon: -82, maxLon: -65 };
 let liveEvents = [];
 const events = document.querySelector('#events');
@@ -30,5 +31,9 @@ async function loadEarthquakes() {
   }
 }
 $('#filter').addEventListener('click', render);
+window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); deferredInstallPrompt = event; const button = $('#install-app'); button.hidden = false; });
+$('#install-app').addEventListener('click', async () => { if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; $('#install-app').hidden = true; });
+window.addEventListener('appinstalled', () => { $('#install-app').hidden = true; });
 $('#subscription-form').addEventListener('submit', async event => { event.preventDefault(); const form = event.target; const message = $('#form-message'); message.textContent = 'Enviando confirmación…'; try { const response = await fetch('/api/subscribe', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#email').value,consent:form.querySelector('input[type="checkbox"]').checked})}); const result = await response.json(); if (!response.ok) throw new Error(result.error); message.textContent = result.message; form.reset(); } catch (error) { message.textContent = error.message || 'No fue posible procesar tu solicitud.'; } });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
 loadEarthquakes(); setInterval(loadEarthquakes, 60000);
