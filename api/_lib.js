@@ -2,7 +2,10 @@ const { neon } = require('@neondatabase/serverless');
 const crypto = require('crypto');
 
 const sql = () => neon(process.env.DATABASE_URL);
-const init = async () => sql()(`CREATE TABLE IF NOT EXISTS subscribers (email TEXT PRIMARY KEY, status TEXT NOT NULL, verify_token TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), verified_at TIMESTAMPTZ); CREATE TABLE IF NOT EXISTS oauth_tokens (provider TEXT PRIMARY KEY, refresh_token TEXT NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW());`);
+const init = async () => {
+  await sql()(`CREATE TABLE IF NOT EXISTS subscribers (email TEXT PRIMARY KEY, status TEXT NOT NULL, verify_token TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), verified_at TIMESTAMPTZ)`);
+  await sql()(`CREATE TABLE IF NOT EXISTS oauth_tokens (provider TEXT PRIMARY KEY, refresh_token TEXT NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
+};
 const token = () => crypto.randomBytes(32).toString('hex');
 const baseUrl = () => process.env.APP_URL || 'https://alertanacional-cl.vercel.app';
 async function sendMail(to, subject, html) {
