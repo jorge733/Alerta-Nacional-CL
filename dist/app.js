@@ -22,8 +22,9 @@ async function loadEarthquakes() {
     $('#today-count').textContent = liveEvents.length;
     $('#alert-count').textContent = liveEvents.filter(event => event.mag >= 5.5).length;
     const latest = liveEvents[0];
-    $('#national-status').innerHTML = latest ? 'Actividad sísmica<br>monitoreada' : 'Sin actividad sísmica<br>reciente';
-    $('#national-detail').textContent = latest ? `Último evento: M ${latest.mag.toFixed(1)} · ${latest.place}.` : 'No se registran eventos dentro del área de monitoreo.';
+    const latestAgeHours = latest ? (Date.now() - latest.time) / 36e5 : Infinity;
+    $('#national-status').innerHTML = latest && latestAgeHours < 6 ? 'Actividad sísmica<br>reciente' : 'Sin eventos<br>recientes';
+    $('#national-detail').textContent = latest ? `Último registro: M ${latest.mag.toFixed(1)} · ${latest.place} (${age(latest.time).toLowerCase()}).` : 'No se registran eventos dentro del área de monitoreo.';
     const generated = new Date(feed.metadata.generated);
     $('#updated').textContent = `Actualizado ${generated.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`;
     render();
