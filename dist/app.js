@@ -5,11 +5,11 @@ let liveEvents = [];
 const events = document.querySelector('#events');
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
-function regionOf(place) { const text = (place || '').toLowerCase(); const known = [['valparaíso','Valparaíso'],['valparaiso','Valparaíso'],['biobío','Biobío'],['biobio','Biobío'],['antofagasta','Antofagasta'],['los lagos','Los Lagos'],['santiago','Metropolitana']]; return (known.find(([match]) => text.includes(match)) || [null, 'Chile'])[1]; }
+function regionOf(place) { const text = (place || '').toLowerCase(); const known = [['arica','Arica y Parinacota'],['parinacota','Arica y Parinacota'],['iquique','Tarapacá'],['tarapacá','Tarapacá'],['tarapaca','Tarapacá'],['antofagasta','Antofagasta'],['calama','Antofagasta'],['atacama','Atacama'],['copiapó','Atacama'],['copiapo','Atacama'],['coquimbo','Coquimbo'],['la serena','Coquimbo'],['valparaíso','Valparaíso'],['valparaiso','Valparaíso'],['santiago','Metropolitana'],['rancagua','O\'Higgins'],['o\'higgins','O\'Higgins'],['talca','Maule'],['maule','Maule'],['ñuble','Ñuble'],['nuble','Ñuble'],['chillán','Ñuble'],['chillan','Ñuble'],['biobío','Biobío'],['biobio','Biobío'],['concepción','Biobío'],['concepcion','Biobío'],['araucanía','La Araucanía'],['araucania','La Araucanía'],['temuco','La Araucanía'],['los ríos','Los Ríos'],['los rios','Los Ríos'],['valdivia','Los Ríos'],['los lagos','Los Lagos'],['puerto montt','Los Lagos'],['aysén','Aysén'],['aysen','Aysén'],['coyhaique','Aysén'],['magallanes','Magallanes'],['punta arenas','Magallanes']]; return (known.find(([match]) => text.includes(match)) || [null, 'Chile'])[1]; }
 function age(time) { const min = Math.max(0, Math.round((Date.now() - time) / 60000)); if (min < 1) return 'Ahora'; if (min < 60) return `Hace ${min} min`; return `Hace ${Math.round(min / 60)} h`; }
 function render() {
   const region = $('#region').value, type = $('#type').value;
-  const list = liveEvents.filter(event => (region === 'Todas' || event.region === region) && (type === 'Todos' || type === 'Sismo'));
+  const list = liveEvents.filter(event => (region === 'Todas' || event.region === region) && (type === 'Todos' || event.type === type));
   $('#count').textContent = `${list.length} ${list.length === 1 ? 'evento' : 'eventos'}`;
   events.innerHTML = list.length ? list.slice(0, 8).map(event => `<article class="event"><time>${age(event.time)}</time><div><h3>Magnitud ${event.mag.toFixed(1)} · ${esc(event.place)}</h3><p>${esc(event.region)} · Profundidad ${event.depth.toFixed(1)} km · ${new Date(event.time).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</p></div><a class="tag sismo" href="${esc(event.url)}" target="_blank" rel="noreferrer">SISMO ↗</a></article>`).join('') : '<p class="disclaimer">No hay eventos sísmicos recientes que coincidan con estos filtros.</p>';
 }
@@ -18,7 +18,7 @@ async function loadEarthquakes() {
     const response = await fetch(`${FEED_URL}?_=${Date.now()}`, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
     if (!response.ok) throw new Error('Fuente no disponible');
     const feed = await response.json();
-    liveEvents = feed.features.filter(item => { const [lon, lat] = item.geometry.coordinates; return lat >= CHILE.minLat && lat <= CHILE.maxLat && lon >= CHILE.minLon && lon <= CHILE.maxLon; }).map(item => ({ mag: item.properties.mag || 0, place: item.properties.place || 'Ubicación por determinar', region: regionOf(item.properties.place), time: item.properties.time, depth: item.geometry.coordinates[2] || 0, url: item.properties.url })).sort((a, b) => b.time - a.time);
+    liveEvents = feed.features.filter(item => { const [lon, lat] = item.geometry.coordinates; return lat >= CHILE.minLat && lat <= CHILE.maxLat && lon >= CHILE.minLon && lon <= CHILE.maxLon; }).map(item => ({ mag: item.properties.mag || 0, place: item.properties.place || 'Ubicación por determinar', region: regionOf(item.properties.place), type: 'Sismo', time: item.properties.time, depth: item.geometry.coordinates[2] || 0, url: item.properties.url })).sort((a, b) => b.time - a.time);
     $('#today-count').textContent = liveEvents.length;
     $('#alert-count').textContent = liveEvents.filter(event => event.mag >= 5.5).length;
     const latest = liveEvents[0];
