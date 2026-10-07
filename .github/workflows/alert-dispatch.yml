@@ -20,6 +20,7 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           APP_URL: ${{ vars.APP_URL || 'https://alertanacional-cl.vercel.app' }}
         run: |
+          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET no configurado; se omite el despacho."; exit 0; fi
           curl --fail-with-body --silent --show-error --max-time 60 \
             -H "Authorization: Bearer $CRON_SECRET" \
             "$APP_URL/api/cron/earthquakes"
