@@ -65,14 +65,15 @@
       <section id="suscripcion" class="subscribe">
         <div class="subscribe-copy"><p class="eyebrow">ALERTAS A TU CORREO</p><h2>Información útil,<br><em>cuando importa.</em></h2><p class="subscribe-intro">Recibe avisos de sismos y emergencias relevantes para Chile directamente en tu bandeja de entrada.</p><div class="subscribe-points"><span><b>✓</b> Confirmación por correo</span><span><b>✓</b> Sin spam ni publicidad</span><span><b>✓</b> Puedes cancelar cuando quieras</span></div></div>
         <form id="subscription-form">
-          <div class="form-card"><div class="form-card-heading"><span class="form-icon">✉</span><div><strong>Activa tus alertas</strong><small>Te enviaremos un enlace para confirmar.</small></div></div><label for="email">Tu correo electrónico</label><div class="email-row"><input id="email" type="email" placeholder="nombre@correo.cl" autocomplete="email" required /><button type="submit">Activar alertas <span>→</span></button></div><label class="check"><input type="checkbox" required /> <span>Acepto recibir alertas de Alerta Nacional CL y confirmo que leí la información del servicio.</span></label>
+          <div class="form-card"><div class="form-card-heading"><span class="form-icon">✉</span><div><strong>Activa tus alertas</strong><small>Te enviaremos un enlace para confirmar.</small></div></div><label for="email">Tu correo electrónico</label><div class="email-row"><input id="email" type="email" placeholder="nombre@correo.cl" autocomplete="email" required /><button type="submit">Activar alertas <span>→</span></button></div><div class="pref-row"><label>Región<select id="sub-region"><option value="">Todo Chile</option></select></label><label>Avisarme desde<select id="sub-mag"><option value="4.5">Magnitud 4.5</option><option value="5" selected>Magnitud 5.0</option><option value="5.5">Magnitud 5.5</option><option value="6">Magnitud 6.0</option><option value="7">Magnitud 7.0</option></select></label></div><label class="check"><input type="checkbox" required /> <span>Acepto recibir alertas de Alerta Nacional CL y confirmo que leí la información del servicio.</span></label>
           <p id="form-message" role="status" aria-live="polite"></p>
-          <small class="form-note">Tus datos se usan únicamente para enviarte alertas.</small></div>
+          <small class="form-note">Por ahora se envían alertas de sismos; incendios y otras emergencias se suman pronto. Tus datos se usan únicamente para enviarte alertas.</small></div>
         </form>
       </section>
 
       <footer><span>ALERTA NACIONAL CL</span><span>Plataforma informativa · Chile</span><span>Las alertas oficiales prevalecen.</span></footer>
     </main>
+    <script src="regions.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

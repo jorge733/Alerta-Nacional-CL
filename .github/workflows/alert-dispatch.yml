@@ -1,0 +1,25 @@
+name: Despacho de alertas
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+# Never run two dispatches at once, so a subscriber can't receive the same alert twice.
+concurrency:
+  group: alert-dispatch
+  cancel-in-progress: false
+
+jobs:
+  earthquakes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Revisar sismos y enviar alertas
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_URL: ${{ vars.APP_URL || 'https://alertanacional-cl.vercel.app' }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_URL/api/cron/earthquakes"
