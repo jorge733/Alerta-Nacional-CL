@@ -16,6 +16,8 @@ const migrate = async () => {
   await db`UPDATE subscribers SET unsubscribe_token = md5(random()::text || email || clock_timestamp()::text) || md5(random()::text) WHERE unsubscribe_token IS NULL`;
   // One row per emergency event; deliveries make retries idempotent per subscriber.
   await db`CREATE TABLE IF NOT EXISTS alerts (event_id TEXT PRIMARY KEY, type TEXT NOT NULL, region TEXT, magnitude NUMERIC, title TEXT NOT NULL, details JSONB NOT NULL, occurred_at TIMESTAMPTZ NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), completed_at TIMESTAMPTZ)`;
+  // Every region an alert applies to; empty means nationwide (e.g. tsunami).
+  await db`ALTER TABLE alerts ADD COLUMN IF NOT EXISTS regions TEXT[]`;
   await db`CREATE TABLE IF NOT EXISTS alert_deliveries (event_id TEXT NOT NULL REFERENCES alerts(event_id), email TEXT NOT NULL, sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), PRIMARY KEY (event_id, email))`;
 };
 // Run migrations once per warm function instance.
